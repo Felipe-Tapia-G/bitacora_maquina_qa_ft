@@ -1,0 +1,30 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    secretEnv: ["BMPQAPASS", "BMPQAHOST", "BMPQAUSERNAME", "BMPQABD"]
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        docker build -t gcr.io/${PROJECT_ID}/bmp-qa:$SHORT_SHA --build-arg=BMPQAPASS=$$BMPQAPASS --build-arg=BMPQAHOST=$$BMPQAHOST --build-arg=BMPQAUSERNAME=$$BMPQAUSERNAME --build-arg=BMPQABD=$$BMPQABD  .
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/${PROJECT_ID}/bmp-qa:$SHORT_SHA"]
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "bmp-qa"
+      - "--region=${_REGION}"
+      - "--platform=managed"
+      - "--allow-unauthenticated"
+      - "--image=gcr.io/${PROJECT_ID}/bmp-qa:$SHORT_SHA"
+availableSecrets:
+  secretManager:
+    - versionName: projects/616979754781/secrets/BMPQAPASS/versions/latest
+      env: "BMPQAPASS"
+    - versionName: projects/616979754781/secrets/BMPQABD/versions/latest
+      env: "BMPQABD"
+    - versionName: projects/616979754781/secrets/BMPQAHOST/versions/latest
+      env: "BMPQAHOST"
+    - versionName: projects/616979754781/secrets/BMPQAUSERNAME/versions/latest
+      env: "BMPQAUSERNAME"
