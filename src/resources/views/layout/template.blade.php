@@ -114,7 +114,7 @@
 
 
 
-      <button type="button" class="btn btn-dark btn-sm">BITACORA   <span class="badge badge-light">Maquina</span> </button>
+      <button type="button" class="btn btn-dark btn-sm">BITACORA  srptest <span class="badge badge-light">Maquina</span> </button>
 <br>
 
       <!-- Heading -->
